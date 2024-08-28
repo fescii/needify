@@ -1,5 +1,5 @@
 // Importing the required modules, fns, configs, and utils...
-const { Sequelize, models } = require('../../models').default;
+const { Sequelize, models } = require('../../models');
 const { Post, User } = models;
 
 

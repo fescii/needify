@@ -1,7 +1,6 @@
 const { 
   validateBio, validateContact, validateEmail, validateName, validatePassword
  } = require('../validators').userValidator;
-const { checkIfStoryExists } = require('../queries').storyQueries;
 
 /**
  * @function checkBio

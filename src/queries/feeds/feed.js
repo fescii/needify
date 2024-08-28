@@ -37,11 +37,9 @@ const fetchFeeds = async reqData => {
 */
 const fetchFeedsWhenLoggedIn = async (user, offset, limit) => {
   try {
-    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
     const stories = await sequelize.query(storiesLoggedIn, {
       replacements: {
         user, 
-        daysAgo: sevenDaysAgo.toISOString(),
         offset, 
         limit 
       },
@@ -125,10 +123,8 @@ const fetchFeedsWhenLoggedIn = async (user, offset, limit) => {
 */
 const fetchFeedsWhenLoggedOut = async (offset, limit) => {
   try {
-    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
     const stories = await sequelize.query(feedStories, {
       replacements: { 
-        daysAgo: sevenDaysAgo.toISOString(),
         offset: offset,
         limit: limit
       },

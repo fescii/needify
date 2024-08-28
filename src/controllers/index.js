@@ -12,6 +12,6 @@ const publicController = require('./public');
 */
 module.exports = {
   authController, errorController, postController, userController,
-  searchController, feedController, activityController,
+  searchController, feedController,
   publicController
 };

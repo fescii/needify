@@ -1,5 +1,3 @@
-
-const { Privileges } = require('../../configs').platformConfig;
 const {
   addPost, editLocation, editPost, editPrice, editEnd, updatePostStatus, removePost
 } = require('../../queries').postQueries;

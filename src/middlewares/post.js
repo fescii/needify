@@ -1,7 +1,6 @@
 const { 
   validatePost, validateContent, validateEnd, validateLocation, validatePrice
  } = require('../validators').postValidator;
-const { checkIfStoryExists } = require('../queries').storyQueries;
 
 /**
  * @function checkPost

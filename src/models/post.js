@@ -135,5 +135,5 @@ module.exports = (User, sequelize, Sequelize) => {
   User.hasMany(Post, { foreignKey: 'author', sourceKey: 'hash', as : 'authored_posts', onDelete: 'CASCADE' });
   Post.belongsTo(User, { foreignKey: 'author', targetKey: 'hash', as: 'post_author', onDelete: 'CASCADE' });
 
-  return { Story }
+  return { Post }
 }

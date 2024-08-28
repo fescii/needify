@@ -2,7 +2,7 @@
 const {
   createPost, updatePost, deletePost,
   updateLocation, updatePrice, updateEnd,
-  publishPost, deletePost
+  publishPost
 } = require('./base');
 const { findUserFollowers, findUserFollowing, findAuthorPosts } = require('./author');
 const { getPost } = require('./public');

@@ -234,7 +234,7 @@ const findFollowingWhenLoggedOut = async (where, order, limit, offset) => {
 }
 
 // Export the module
-export default {
+module.exports = {
   findUserPost, findUserPosts,
   findFollowersWhenLoggedIn, findFollowingWhenLoggedIn,
   findFollowersWhenLoggedOut, findFollowingWhenLoggedOut

@@ -86,7 +86,6 @@ module.exports = (sequelize, Sequelize) => {
 			{	fields: ['bio'] },
 			{	fields: ['followers'] },
 			{	fields: ['following'] },
-			{	fields: ['views'] },
 			{	fields: ['verified'] },
 			{	fields: ['createdAt'] }
 		]

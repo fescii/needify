@@ -1,5 +1,5 @@
 // import models
-const { Sequelize, models } = require('../../models').models;
+const { Sequelize, models } = require('../../models');
 const Post  = models.Post;
 
 /**
