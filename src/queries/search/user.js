@@ -33,13 +33,10 @@ const findUsersByQuery = async reqData => {
   // if no users found, return an empty array
   if (!users) {
     return {
-      data: {
-        people: [],
-        limit: limit,
-        offset: offset,
-        last: true,
-      },
-      error: null
+      people: [],
+      limit: limit,
+      offset: offset,
+      last: true,
     }
   }
 
@@ -53,9 +50,9 @@ const findUsersByQuery = async reqData => {
   // create a data object
   return { 
     people: users,
-      limit: limit,
-      offset: offset,
-      last: last,
+    limit: limit,
+    offset: offset,
+    last: last,
   }
 }
 

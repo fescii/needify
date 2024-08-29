@@ -31,7 +31,6 @@ const searchPosts = async (req, res, next) => {
     // Find the stories
     const data = await findPostsByQuery(reqData);
 
-
     // return the response
     return res.status(200).json({
       success: true,

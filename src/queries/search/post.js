@@ -3,9 +3,9 @@ const { Post } = require('../../models').models;
 
 /**
  * @function findPostsByQuery
- * @description Query to finding replies by query: using vector search
+ * @description Query to finding posts by query: using vector search
  * @param {Object} reqData - The request data
- * @returns {Object} - The replies object or null, and the error if any
+ * @returns {Object} - The posts object or null, and the error if any
 */
 const findPostsByQuery = async reqData => {
   const {
@@ -30,31 +30,28 @@ const findPostsByQuery = async reqData => {
   }
 
   // build the query(vector search)
-  let replies = await Post.search(queryOptions);
+  let posts = await Post.search(queryOptions);
 
   // check if length is 0
-  if (replies.length < 1) {
+  if (posts.length < 1) {
     return {
-      data: {
-        replies: [],
-        limit: limit,
-        offset: offset,
-        last: true,
-      },
-      error: null
+      posts: [],
+      limit: limit,
+      offset: offset,
+      last: true,
     }
   }
 
-  const last = replies.length < limit;
+  const last = posts.length < limit;
 
-  replies = replies.map(reply => {
-    reply.you = user === reply.author;
-    return reply;
+  posts = posts.map(post => {
+    post.you = user === post.author;
+    return post;
   });
 
   // create a data object
   return {
-    replies: replies,
+    posts: posts,
     limit: limit,
     offset: offset,
     last: last,
