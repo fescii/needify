@@ -75,7 +75,7 @@ module.exports = (User, sequelize, Sequelize) => {
     timezone: 'UTC',
     indexes: [
       { unique: true, fields: ['id'] },
-      { fields: ['kind'] },
+      { fields: ['kind'] }, { fields: ['name'] },
       { fields: ['published'] },
       { fields: ['author'] },
       { unique: true, fields: ['hash'] },
@@ -90,17 +90,23 @@ module.exports = (User, sequelize, Sequelize) => {
     // Run the raw SQL query to add the `ts` column
     sequelize.query(`
       ALTER TABLE post.posts ADD COLUMN IF NOT EXISTS search TSVECTOR
-      GENERATED ALWAYS AS(setweight(to_tsvector('english', coalesce(name, '')), 'A') || setweight(to_tsvector('english', coalesce(content, '')), 'B') STORED;
+      GENERATED ALWAYS AS(setweight(to_tsvector('english', coalesce(name, '')), 'A') || setweight(to_tsvector('english', coalesce(content, '')), 'B')) STORED;
     `);
 
     // create the GIN index for the full_search column
     sequelize.query(`CREATE INDEX IF NOT EXISTS search_post_idx ON post.posts USING GIN(search)`);
   });
 
+  // add afterCreate hook
+  Post.afterDestroy(async post => {
+    // increment user needs by 1
+    await User.increment('needs', { by: 1, where: { hash: post.author } });
+  });
+
   // add afterDestroy hook 
   Post.afterDestroy(async post => {
-    // construct the job payload:
-   
+    // decrement user needs by 1
+    await User.decrement('needs', { by: 1, where: { hash: post.author } });
   });
 
 
