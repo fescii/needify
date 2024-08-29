@@ -25,35 +25,35 @@ const findAuthorPosts = async(req, res, next) => {
     return next(error);
   }
 
-  // convert the page and total stories to integer with zero fallback
+  // convert the page and total posts to integer with zero fallback
   page = parseInt(page, 10) || 1;
 
   // create user hash from the request object
   const user = req.user ? req.user.hash : null;
 
   const reqData = {
-    hash: hash.toUpperCase(),
+    hash: hash,
     user,
     page,
     limit: 10
   }
 
   try {
-    // Find the stories
+    // Find the posts
     const data = await findPostsByAuthor(reqData);
 
     // check if there is no data
-    if (!data || data.stories.length === 0) {
+    if (data.posts.length === 0) {
       return res.status(404).json({
-        success: false,
-        message: 'No stories found!'
+        success: true,
+        message: 'No posts found!'
       });
     }
 
     // return the response
     return res.status(200).json({
       success: true,
-      message: data.stories ? 'Stories found!' : 'No stories found!',
+      message: data.posts ? 'Stories found!' : 'No posts found!',
       data
     });
   } catch (error) {
@@ -89,7 +89,7 @@ const findUserFollowers = async(req, res, next) => {
   const user = req.user ? req.user.hash : null;
 
   const reqData = {
-    hash: hash.toUpperCase(),
+    hash: hash,
     user,
     page,
     limit: 10
@@ -146,7 +146,7 @@ const findUserFollowing = async(req, res, next) => {
   const user = req.user ? req.user.hash : null;
 
   const reqData = {
-    hash: hash.toUpperCase(),
+    hash: hash,
     user,
     page,
     limit: 10

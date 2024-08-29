@@ -2,7 +2,6 @@
 const { Sequelize, models } = require('../../models');
 const { Post, User } = models;
 
-
 /**
  * @function findPostWhenLoggedIn
  * @description a function that queries posts when user is logged in
@@ -101,7 +100,6 @@ const findPostsWhenLoggedIn = async (where, order, user, limit, offset) => {
       }
     ],
   });
-
   // return the posts
   return posts.map(post => {
     const data = post.dataValues;
@@ -138,16 +136,10 @@ const findPostsWhenLoggedOut = async (where, order, limit, offset) => {
     ],
   });
 
-  // Check if the posts exist
-  if (posts.length < 1) {
-    return { posts: null, error: null };
-  }
-
   // return the posts
   return posts.map(post => {
     const data = post.dataValues;
     data.you = false;
-    data.authenticated = false;
 
     return data;
   })

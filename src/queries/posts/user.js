@@ -1,6 +1,6 @@
 // Importing the required modules, fns, configs, and utils...
 const { Sequelize, models } = require('../../models');
-const { Post, User } = models;
+const { Post, User, Connect } = models;
 
 
 /**
@@ -53,22 +53,19 @@ const findUserPosts = async (where, order, limit, offset) => {
       {
         model: User,
         as: 'post_author',
-        attributes:['hash', 'bio', 'name', 'picture', 'followers', 'following',, 'verified', 'email', 'contact'],
+        attributes:['hash', 'bio', 'name', 'picture', 'followers', 'following', 'verified', 'email', 'contact'],
       }
     ],
   });
 
   // return the posts
-  return { 
-    posts: posts.map(post => {
-      const data = post.dataValues;
-      // add you to the post data
-      data.you = true;
+  return posts.map(post => {
+    const data = post.dataValues;
+    // add you to the post data
+    data.you = true;
 
-      return data;
-    }),
-    error: null 
-  };
+    return data;
+  })
 }
 
 /**
