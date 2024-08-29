@@ -213,7 +213,7 @@ const updateProfilePassword = async (req, res, next) => {
 const updateProfileName = async (req, res, next) => {
   try {
     const userHash = req.user.hash;
-    const user = await editName(req?.data?.name, userHash);
+    const user = await editName(req.data?.name, userHash);
 
     // Check if user is null
     if (!user) {

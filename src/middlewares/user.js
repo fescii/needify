@@ -31,7 +31,7 @@ const checkBio = async(req, res, next) => {
 }
 
 /**
- * @function checkCotact
+ * @function checkContact
  * @name checkContact
  * @description This middleware validates the user contact: DATA before being passed to the controllers or other middlewares
  * @param {Object} req - Request object

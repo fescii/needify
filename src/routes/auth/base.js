@@ -1,6 +1,6 @@
 const { signin, logout  } = require('../../controllers').authController;
 const { register } = require('../../controllers').userController;
-const { checkDuplicateUser } = require('../../middlewares').authMiddleware;
+const { checkDuplicateUser, checkLogin } = require('../../middlewares').authMiddleware;
 /**
  * @function authRoutes
  * @description a modular function that registers all the auth routes
@@ -25,7 +25,7 @@ module.exports = (app, url) => {
 
   //Login route
   app.post(
-    `${url}/login`,
+    `${url}/login`, checkLogin,
     signin
   );
 

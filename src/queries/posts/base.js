@@ -299,7 +299,7 @@ const editEnd = async data => {
     if (!post) return null;
 
     // Update the post with the new data: price
-    await post.update({ price: data.end }, { transaction: t });
+    await post.update({ end: data.end }, { transaction: t });
 
     // Commit the transaction
     await t.commit();
@@ -314,7 +314,7 @@ const editEnd = async data => {
     await t.rollback();
 
     // return the error
-    return { post: null, error };
+    throw error;
   }
 }
 

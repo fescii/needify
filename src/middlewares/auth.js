@@ -32,22 +32,20 @@ const checkDuplicateUser = async (req, res, next) => {
     });
   }
 
-
   try {
     user = await checkIfUserExits(data);
     if (user) {
       return res.status(409).send({
         success: false,
-        message: "Failed! User with similar email is already exits!"
+        message: "Failed! User with similar email or username is already exits!"
       });
     }
   } catch (error) {
     return next(error);
   }
-
   
   // Call next function to proceed with data processing
-  req.data = user;
+  req.data = data;
   next();
 };
 
@@ -62,7 +60,6 @@ const checkDuplicateUser = async (req, res, next) => {
 */
 // Middleware to verify token(JWT)
 const verifyToken = async (req, res, next) => {
-
   // Get jwt token from cookies or headers
   let token = req.cookies['x-access-token'] || req.headers["x-access-token"]
 
@@ -106,7 +103,6 @@ const verifyToken = async (req, res, next) => {
 */
 // Middleware to verify token(JWT)
 const verifyLogin = async (req, res, next) => {
-
   // Get jwt token from cookies or headers
   let token = req.cookies['x-access-token'] || req.headers["x-access-token"]
 
@@ -186,7 +182,7 @@ const checkToken = async (req, res, next) => {
 */
 const checkLogin = async(req, res, next) => {
   //Check if the payload is available in the request object
-  if (!req.body || !req.user) {
+  if (!req.body) {
     const error = new Error('Payload data is not defined in the req object!');
     return next(error);
   }

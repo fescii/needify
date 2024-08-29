@@ -46,7 +46,7 @@ const getAuthorInfo = async (req, res, next) => {
 
   try {
     // Get the author contact details
-    const user = await findAuthorInfo(hash.toUpperCase());
+    const user = await findAuthorInfo(hash);
 
     // if user not found
     if(!user) {

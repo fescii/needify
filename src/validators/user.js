@@ -43,7 +43,7 @@ const validateEmail = async (data) => {
   }
 
   //sanitize email
-  const email = await sanitizeUtil.sanitizeInput(data.email)
+  const email = sanitizeInput(data.email)
 
   // validate email
   // noinspection RegExpRedundantEscape
@@ -93,7 +93,7 @@ const validateBio = async (data) => {
 
   try {
     return {
-      bio:  sanitizeUtil.sanitizeInput(data.bio)
+      bio: sanitizeInput(data.bio)
     }
   } catch (error) {
     throw new Error("An error occurred validating the payload")
@@ -115,7 +115,7 @@ const validateName = async (data) => {
 
   try {
     return {
-     name: sanitizeUtil.sanitizeInput(data.name)
+     name: sanitizeInput(data.name)
     }
   } catch (error) {
     throw new Error("An error occurred validating the payload")

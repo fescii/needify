@@ -174,8 +174,8 @@ const getUserProfile = async hash => {
 const findAuthorInfo = async hash => {
   // Find the user by hash
   const user = await User.findOne({ 
-    attributes:['hash', 'bio', 'name', 'email', 'picture', 'followers', 'following', 'stories', 'verified', 'replies', "contact", 'contact'],
-    where: { hash }
+    attributes:['hash', 'bio', 'name', 'email', 'picture', 'followers', 'following', 'needs', 'verified', "contact"],
+    where: { hash: hash }
   });
 
   // If user is not found return null

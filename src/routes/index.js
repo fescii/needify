@@ -1,6 +1,7 @@
 // Init all routes
 module.exports = (app) => {
   require('./auth')(app);
+  require('./posts')(app);
   require('./feeds')(app);
   require('./users')(app);
   require('./search')(app);

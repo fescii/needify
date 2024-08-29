@@ -17,7 +17,6 @@ const { userLogin } = require('../../queries').authQueries;
  *
 */
 const signin = async (req, res, next) => {
-
   try {
     // Check if user with that email exists
     const user = await userLogin(req.data.user_key)
@@ -32,7 +31,7 @@ const signin = async (req, res, next) => {
 
     // Compare passwords
     let passwordIsValid = bcrypt.compareSync(
-      data.password,
+      req.data.password,
       user.password
     );
 

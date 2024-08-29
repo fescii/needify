@@ -39,7 +39,7 @@ const validateUser = async data => {
   try {
     return {
       name: sanitizeUtil.sanitizeInput(data.name),
-      hash: sanitizeUtil.sanitizeInput(data.username),
+      hash: sanitizeUtil.sanitizeInput(data.username).toLowerCase(),
       email: sanitizeUtil.sanitizeInput(data.email),
       password: sanitizeUtil.sanitizeInput(data.password)
     }

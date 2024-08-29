@@ -22,9 +22,6 @@ const followUser = async (req, res, next) => {
   // Get the user hash to follow url params
   let followHash = req.params.hash;
 
-  // convert the follow hash to uppercase
-  followHash = followHash.toUpperCase();
-
   // Check if the follow hash and user hash are equal
   if (userHash === followHash) {
     return res.status(409).send({
@@ -36,14 +33,6 @@ const followUser = async (req, res, next) => {
   try {
     // Get the user data from db;
     const followed = await connectToUser(userHash, followHash);
-
-    // add activity to the queue
-    if (followed) {
-      addActivity({
-        kind: 'user', action: 'follow', author: req.user.hash, name: req.user.name,
-        to: followHash, target: followHash, verb: 'followed',
-      });
-    }
 
     // On success return response to the user
     return res.status(201).send({

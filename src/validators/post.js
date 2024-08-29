@@ -31,21 +31,19 @@ const validatePost = async data => {
   }
 
   // check if published is present and is a boolean
-  if (!data.published || typeof data.published !== 'boolean') {
+  if (data.published === null || typeof data.published !== 'boolean') {
     throw new Error('Published should be defined and a boolean: true/false')
   }
 
-  // Check if the end is a number and is: >=1
-  if (data.end) {
-    if (typeof data.end !== 'number' || data.end < 1) {
-      throw new Error('End date should be a should be a number from 1');
-    }
-
-    // create a date with a timezone and add end as days
-    const today = new Date(Date.now());
-
-    data.end = new Date(today.setDate(today.getDate() + data.end));
+  if (!data.end || typeof data.end !== 'number' || data.end < 1) {
+    throw new Error('End days is required, and should be a should be a number from 1');
   }
+
+  // create a date with a timezone and add end as days
+  const today = new Date(Date.now());
+
+  // add data.end as days not date
+  data.end = today.setDate(today.getDate() + data.end);
   
   try {
     // Validate when story type is: post
@@ -131,11 +129,12 @@ const validateEnd = async data => {
 
   try {
     // create a date with a timezone and add end as days
-    const today = new Date(Date.now());
+    const today = new Date();
+    today.setDate(today.getDate() + data.end)
 
     // Return the validated duration
     return {
-      end: new Date(today.setDate(today.getDate() + data.end))
+      end: today.toISOString()
     };
 
   } catch (error) {

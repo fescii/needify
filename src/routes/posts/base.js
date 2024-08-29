@@ -1,7 +1,7 @@
 // Post all routes
 const { verifyToken } = require('../../middlewares').authMiddleware;
 const {
-  checkPost, checkContent, checkEnd, checkLocation, checkPrice
+  checkPost, checkContent, checkEnd, checkLocation, checkPrice, checkName
 } = require('../../middlewares').postMiddleware;
 const {
   createPost, updatePost, deletePost, updateLocation,
@@ -44,7 +44,7 @@ module.exports = (app, url) => {
 
   // Route for handling updating story name
   app.patch(`${url}/:hash/edit/name`,
-    [verifyToken, checkPost],
+    [verifyToken, checkName],
     updateName
   );
 
