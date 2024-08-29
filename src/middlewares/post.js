@@ -1,5 +1,5 @@
 const { 
-  validatePost, validateContent, validateEnd, validateLocation, validatePrice
+  validatePost, validateContent, validateEnd, validateLocation, validatePrice, validateName
  } = require('../validators').postValidator;
 
 /**
@@ -55,6 +55,35 @@ const checkContent = async(req, res, next) => {
       success: false,
       message: error.message
     }); 
+  }
+}
+
+
+/**
+ * @function checkName
+ * @name checkName
+ * @description This middleware validates the post name: DATA before being passed to the controllers or other middlewares
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @package {Function} next - Next middleware function
+ * @returns {Object} - Returns response object or pass error to the next() middleware
+*/
+const checkName = async(req, res, next) => {
+  //Check if the payload is available in the request object
+  if (!req.body || !req.user) {
+    const error = new Error('Payload data is not defined in the req object!');
+    return next(error);
+  }
+
+  try {
+    // Add the validated data to the request object for the next() function
+    req.data = await validateName(req.body);
+    await next();
+  } catch (error) {
+    return res.status(400).send({
+      success: false,
+      message: error.message
+    });
   }
 }
 
@@ -143,6 +172,6 @@ const checkPrice = async(req, res, next) => {
 }
 
 module.exports = {
-  checkPost, checkContent,
+  checkPost, checkContent, checkName,
   checkEnd, checkLocation, checkPrice,
 };

@@ -12,6 +12,9 @@ const kindOptions = ['product', 'service'];
  * @returns {Object} data - The validated story data object and throws an error if any
 */
 const validatePost = async data => {
+  // check if name is defined and is a string
+  if(!data.name || typeof data.name !== 'string') throw new Error('Name is required and should be a string');
+
   // Check if the data mandatory fields are present
   if (!data.kind || !data.content || typeof data.kind !== 'string' || typeof data.content !== 'string') {
     throw new Error('Kind and content are required and should be strings')
@@ -19,7 +22,7 @@ const validatePost = async data => {
 
   // Check if the location and price are present and are valid
   if (!data.location || !data.price || typeof data.location !== 'string' || typeof data.price !== 'number') {
-    throw new Error('Location and price are required and should be string and number respectivly!')
+    throw new Error('Location and price are required and should be string and number respectively!')
   }
 
   // Check if the data kind is valid: check against the StoryType array
@@ -48,6 +51,7 @@ const validatePost = async data => {
     // Validate when story type is: post
     return  {
       kind: data.kind,
+      name: sanitizeInput(data.name),
       published: data.published,
       content: sanitizeInput(data.content),
       location: sanitizeInput(data.location),
@@ -84,6 +88,33 @@ const validateContent = async data => {
     }
   } catch (error) {
     throw new Error('An error occurred while validating the post content')
+  }
+}
+
+/**
+ * @name validateName
+ * @function validateName
+ * @description a validator function that validates post name before being passed to the controllers or middlewares
+ * @param {Object} data - The post name object
+ * @param {String} data.name - The post name
+ * @returns {Object} data - The validated post name and throws an error if any
+*/
+const validateName = async data => {
+  // Check if the name is present
+  if (!data.name || typeof data.name !== 'string') {
+    throw new Error('Name is required and should be a string');
+  }
+
+  try {
+    // Validate the name
+    const validatedName = sanitizeInput(data.name);
+
+    // Return the validated name
+    return {
+      name: validatedName
+    }
+  } catch (error) {
+    throw new Error('An error occurred while validating the post name')
   }
 }
 
@@ -151,5 +182,5 @@ const validateLocation = async data => {
 }
 
 module.exports = {
-  validatePost, validateContent, validateEnd, validatePrice, validateLocation
+  validatePost, validateContent, validateEnd, validatePrice, validateLocation, validateName
 }

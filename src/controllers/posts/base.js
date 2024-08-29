@@ -1,5 +1,5 @@
 const {
-  addPost, editLocation, editPost, editPrice, editEnd, updatePostStatus, removePost
+  addPost, editLocation, editPost, editPrice, editEnd, updatePostStatus, removePost, editName
 } = require('../../queries').postQueries;
 
 
@@ -110,19 +110,19 @@ const updatePost = async (req, res, next) => {
 
   try {
     // Check if post was not found
-  if (!post) {
-    // Return the 404 response
-    return res.status(404).send({
-      success: false,
-      message: "Post not you are trying to update was not found!"
+    if (!post) {
+      // Return the 404 response
+      return res.status(404).send({
+        success: false,
+        message: "Post not you are trying to update was not found!"
+      });
+    }
+    // Return success response
+    return res.status(200).send({
+      success: true,
+      post: post,
+      message: "Post content was updated successfully!",
     });
-  }
-  // Return success response
-  return res.status(200).send({
-    success: true,
-    post: post,
-    message: "Post content was updated successfully!",
-  });
   } catch (error) {
     return next(error);
   }
@@ -151,24 +151,70 @@ const updateLocation = async (req, res, next) => {
   data.hash = hash;
 
   try {
-    // Update the post loaction
-  const post = await editLocation(data);
+    // Update the post location
+    const post = await editLocation(data);
 
-  // Check if post was not found
-  if (!post) {
-    // Return the 404 response
-    return res.status(404).send({
-      success: false,
-      message: "Post not you are trying to update was not found!"
+    // Check if post was not found
+    if (!post) {
+      // Return the 404 response
+      return res.status(404).send({
+        success: false,
+        message: "Post not you are trying to update was not found!"
+      });
+    }
+
+    // Return success response
+    return res.status(200).send({
+      success: true,
+      post: post,
+      message: "Post location was updated successfully!",
     });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+/**
+ * @function updateName
+ * @description Controller for updating post name
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @param {Function} next - Next middleware function
+ * @returns {Object} - Returns response object
+*/
+const updateName = async (req, res, next) => {
+  // Check if the params or payload is available
+  const { hash } = req.params;
+
+  if (!req.data || !hash) {
+    const error = new Error('Payload data or params data is undefined!');
+    return next(error)
   }
 
-  // Return success response
-  return res.status(200).send({
-    success: true,
-    post: post,
-    message: "Post loaction was updated successfully!",
-  });
+  // add author and post hash to the data
+  const data = req.data;
+  data.author = req.user.hash;
+  data.hash = hash;
+
+  try {
+    // Update the post name
+    const post = await editName(data);
+
+    // Check if post was not found
+    if (!post) {
+      // Return the 404 response
+      return res.status(404).send({
+        success: false,
+        message: "Post not you are trying to update was not found!"
+      });
+    }
+
+    // Return success response
+    return res.status(200).send({
+      success: true,
+      post: post,
+      message: "Post name was updated successfully!",
+    });
   } catch (error) {
     return next(error);
   }
@@ -199,23 +245,23 @@ const updatePrice = async (req, res, next) => {
 
   try {
     // Update the post price
-  const post = await editPrice(data);
+    const post = await editPrice(data);
 
-  // Check if post was not found
-  if (!post) {
-    // Return the 404 response
-    return res.status(404).send({
-      success: false,
-      message: "Post not you are trying to update was not found!"
+    // Check if post was not found
+    if (!post) {
+      // Return the 404 response
+      return res.status(404).send({
+        success: false,
+        message: "Post not you are trying to update was not found!"
+      });
+    }
+
+    // Return success response
+    return res.status(200).send({
+      success: true,
+      post: post,
+      message: "Post price was updated successfully!",
     });
-  }
-  
-  // Return success response
-  return res.status(200).send({
-    success: true,
-    post: post,
-    message: "Post price was updated successfully!",
-  });
   } catch (error) {
     return next(error);
   }
@@ -245,23 +291,23 @@ const updateEnd = async (req, res, next) => {
 
   try {
     // Update the post end date
-  const post = await editEnd(data);
+    const post = await editEnd(data);
 
-  // Check if post was not found
-  if (!post) {
-    // Return the 404 response
-    return res.status(404).send({
-      success: false,
-      message: "Post not you are trying to update was not found!"
+    // Check if post was not found
+    if (!post) {
+      // Return the 404 response
+      return res.status(404).send({
+        success: false,
+        message: "Post not you are trying to update was not found!"
+      });
+    }
+
+    // Return success response
+    return res.status(200).send({
+      success: true,
+      post: post,
+      message: "Post end date was updated successfully!",
     });
-  }
-  
-  // Return success response
-  return res.status(200).send({
-    success: true,
-    post: post,
-    message: "Post end date was updated successfully!",
-  });
   } catch (error) {
     return next(error);
   }
@@ -286,22 +332,22 @@ const deletePost = async (req, res, next) => {
 
   try {
     // Remove the post
-  const deleted = await removePost({ author: req.user.hash, hash });
+    const deleted = await removePost({ author: req.user.hash, hash });
 
-  // Check if post was not found
-  if (!deleted) {
-    // Return the 404 response
-    return res.status(404).send({
-      success: false,
-      message: "Post you are trying to delete was not found!"
+    // Check if post was not found
+    if (!deleted) {
+      // Return the 404 response
+      return res.status(404).send({
+        success: false,
+        message: "Post you are trying to delete was not found!"
+      });
+    }
+
+    // Return success response
+    return res.status(200).send({
+      success: true,
+      message: "Post was deleted successfully!",
     });
-  }
-
-  // Return success response
-  return res.status(200).send({
-    success: true,
-    message: "Post was deleted successfully!",
-  });
   } catch (error) {
     return next(error);
   }
@@ -310,5 +356,5 @@ const deletePost = async (req, res, next) => {
 module.exports = {
   createPost, updatePost, deletePost,
   updateLocation, updatePrice, updateEnd,
-  publishPost, deletePost
+  publishPost, deletePost, updateName
 }

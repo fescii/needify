@@ -195,14 +195,20 @@ module.exports = (sequelize, Sequelize) => {
 
 	// add hook to connect model: afterCreate
 	Connect.afterCreate(async connect => {
-		// Add the connect to the queue
+		// Increment followers
+		await User.increment('followers', { by: 1, where: { hash: connect.to } });
 		
+		// increment following
+		await User.increment('following', { by: 1, where: { hash: connect.from } });
 	});
 
 	// add hook to connect model: afterDestroy
 	Connect.afterDestroy(async connect => {
-		// Add the connect to the queue
-		
+		// decrement followers
+		await User.decrement('followers', { by: 1, where: { hash: connect.to } });
+    
+    // decrement following
+    await User.decrement('following', { by: 1, where: { hash: connect.from } });
 	});
 
 

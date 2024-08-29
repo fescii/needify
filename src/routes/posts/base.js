@@ -5,7 +5,7 @@ const {
 } = require('../../middlewares').postMiddleware;
 const {
   createPost, updatePost, deletePost, updateLocation,
-  updatePrice, updateEnd, publishPost
+  updatePrice, updateEnd, publishPost, updateName
 } = require('../../controllers').postController;
 
 /**
@@ -42,7 +42,13 @@ module.exports = (app, url) => {
     updatePost
   );
 
-  // Route for handling updating story locatio
+  // Route for handling updating story name
+  app.patch(`${url}/:hash/edit/name`,
+    [verifyToken, checkPost],
+    updateName
+  );
+
+  // Route for handling updating story location
   app.patch(`${url}/:hash/edit/location`,
     [verifyToken, checkLocation],
     updateLocation

@@ -208,6 +208,45 @@ const editLocation = async data => {
 }
 
 /**
+ * @function editName
+ * @description a function that updates a post name in the database
+ * @param {Object} data - The post data object
+ * @param {String} data.name - The post name
+ * @returns {Object} data - The updated post object and error if any
+*/
+const editName = async data => {
+  // start a transaction
+  const t = await sequelize.transaction();
+  try {
+    // Find the post
+    const post = await Post.findOne({ where: { hash: data.hash, author: data.author } });
+
+    // Check if the post exists
+    if (!post) {
+      return null;
+    }
+
+    // Update the post with the new data: title
+    await post.update({ name: data.name }, { transaction: t });
+
+    // Commit the transaction
+    await t.commit();
+
+    // return only the updated fields
+    return {
+      name: post.name
+    }
+  }
+  catch (error) {
+    // Rollback the transaction
+    await t.rollback();
+
+    // return the error
+    throw error
+  }
+}
+
+/**
  * @function editPrice
  * @description a function that updates a post price in the database
  * @param {Object} data - The post data object
@@ -314,7 +353,7 @@ const removePost = async data => {
 
 // Export the module
 module.exports = {
-  addPost, checkIfPostExists,
+  addPost, checkIfPostExists, editName,
   findPost, editPost, editLocation,
   findPostByHash, editPrice, editEnd,
   removePost, updatePostStatus

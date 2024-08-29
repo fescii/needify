@@ -38,6 +38,10 @@ module.exports = (User, sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
     content: {
       type: Sequelize.TEXT,
       allowNull: false
@@ -86,7 +90,7 @@ module.exports = (User, sequelize, Sequelize) => {
     // Run the raw SQL query to add the `ts` column
     sequelize.query(`
       ALTER TABLE post.posts ADD COLUMN IF NOT EXISTS search TSVECTOR
-      GENERATED ALWAYS AS(setweight(to_tsvector('english', coalesce(content, '')), 'A')) STORED;
+      GENERATED ALWAYS AS(setweight(to_tsvector('english', coalesce(name, '')), 'A') || setweight(to_tsvector('english', coalesce(content, '')), 'B') STORED;
     `);
 
     // create the GIN index for the full_search column
@@ -111,7 +115,7 @@ module.exports = (User, sequelize, Sequelize) => {
         FROM posts.posts p
         LEFT JOIN account.users pa ON p.author = pa.hash
         LEFT JOIN user_connections uc ON pa.hash = uc."to"
-        WHERE to_tsvector('english', p.content) @@ to_tsquery('english', :query)
+        WHERE to_tsvector('english', CONCAT(p.name, ' ', p.content)) @@ to_tsquery('english', :query)
         ORDER BY rank DESC, p."createdAt" DESC
         LIMIT :limit 
         OFFSET :offset;
@@ -122,7 +126,7 @@ module.exports = (User, sequelize, Sequelize) => {
         JSON_BUILD_OBJECT('id', pa.id, 'hash', pa.hash, 'bio', pa.bio, 'name', pa.name, 'picture', pa.picture, 'followers', pa.followers, 'following', pa.following, 'verified', pa.verified,'contact', pa.contact, 'email', pa.email, 'is_following', false) AS post_author
         FROM post.posts p
         LEFT JOIN account.users pa ON p.author = pa.hash
-        WHERE to_tsvector('english', p.content) @@ to_tsquery('english', :query)
+        WHERE to_tsvector('english', CONCAT(p.name, ' ', p.content)) @@ to_tsquery('english', :query)
         ORDER BY rank DESC, p."createdAt" DESC
         LIMIT :limit 
         OFFSET :offset;
