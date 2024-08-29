@@ -11,7 +11,7 @@ const feedsLoggedIn = /*sql*/`
   LEFT JOIN account.users pa ON p.author = pa.hash
   LEFT JOIN user_connections uc ON pa.hash = uc."to"
   WHERE p.published = true
-  ORDER p."createdAt" DESC
+  ORDER BY p."createdAt" DESC
   LIMIT :limit 
   OFFSET :offset;
 `

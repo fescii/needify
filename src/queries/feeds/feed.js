@@ -1,204 +1,76 @@
 // Import models
-const { Sequelize, sequelize} = require('../../models').models;
-const { storiesLoggedIn, repliesLoggedIn, feedStories, feedReplies } = require('../raw').feed;
+const { Sequelize, sequelize} = require('../../models');
+const { feedsLoggedIn, feeds } = require('../raw').feed;
 
 /**
  * @function fetchFeeds
- * @description Query to finding trending stories and replies
+ * @description Query to finding trending posts and posts
  * @param {Object} reqData - The request data
- * @returns {Object} - The stories object or null, and the error if any
+ * @returns {Object} - The posts object or null, and the error if any
 */
 const fetchFeeds = async reqData => {
-  try {
-    const { user, limit, page } = reqData;
+  const { user, limit, page } = reqData;
 
-    // calculate the offset and limit
-    const offset = (page - 1) * limit;
+  // calculate the offset and limit
+  const offset = (page - 1) * limit;
 
-    const data =  user ? await fetchFeedsWhenLoggedIn(user, offset, limit) : await fetchFeedsWhenLoggedOut(offset, limit);
-
-    return {
-      data,
-      error: null
-    }
-  }
-  catch (error) {
-    return { data: null, error }
-  }
+  return user ? await fetchFeedsWhenLoggedIn(user, offset, limit) : await fetchFeedsWhenLoggedOut(offset, limit);
 }
 
 /**
  * @function fetchFeedsWhenLoggedIn
- * @description Query to finding trending stories an replies when logged in: using views and likes in the last 7 days
+ * @description Query to finding trending posts an posts when logged in: using views and likes in the last 7 days
  * @param {String} user - The user hash
  * @param {Number} offset - the offset number
  * @param {Number} limit - The limit number
- * @returns {Object} - The stories object or null, and the error if any
+ * @returns {Object} - The posts object or null, and the error if any
 */
 const fetchFeedsWhenLoggedIn = async (user, offset, limit) => {
-  try {
-    const stories = await sequelize.query(storiesLoggedIn, {
-      replacements: {
-        user, 
-        offset, 
-        limit 
-      },
-      type: Sequelize.QueryTypes.SELECT
-    });
+  const posts = await sequelize.query(feedsLoggedIn, {
+    replacements: {
+      user, 
+      offset, 
+      limit 
+    },
+    type: Sequelize.QueryTypes.SELECT
+  });
 
-    const replies = await sequelize.query(repliesLoggedIn, {
-      replacements: {
-        user, 
-        daysAgo: sevenDaysAgo.toISOString(),
-        offset, 
-        limit 
-      },
-      type: Sequelize.QueryTypes.SELECT
-    });
-
-    // Check if the replies || stories exist
-    if (replies.length < 1 && stories.length < 1) {
-      return {
-        replies: [],
-        stories: []
-      }
-    }
-
-    // check if replies exist but stories don't
-    if (replies.length > 0 && stories.length < 1) {
-      // return the replies: map the replies' dataValues
-      const repliesData = replies.map(reply => {
-        reply.you = user === reply.author;
-        return reply;
-      });
-
-      return {
-        replies: repliesData,
-        stories: []
-      }
-    }
-
-    // check if stories exist but replies don't
-    if (replies.length < 1 && stories.length > 0) {
-      // return the stories: map the stories' dataValues
-      const storiesData = stories.map(story => {
-        story.you = user === story.author;
-        return story;
-      });
-
-      return {
-        replies: [],
-        stories: storiesData
-      }
-    }
-
-    // return the replies: map the replies' dataValues
-    const repliesData = replies.map(reply => {
-      reply.you = user === reply.author;
-      return reply;
-    });
-
-    // return the stories: map the stories' dataValues
-    const storiesData = stories.map(story => {
-      story.you = user === story.author;
-      return story;
-    });
-
+  // Check if the posts || posts exist
+  if (posts.length < 1 && posts.length < 1) {
     return {
-      replies: repliesData,
-      stories: storiesData
+      posts: [],
+      posts: []
     }
   }
-  catch (error) {
-    throw error;
-  }
+
+  // return the posts: map the posts' dataValues
+  return posts.map(post => {
+    post.you = user === post.author;
+    return post;
+  });
 }
 
 /**
  * @function fetchFeedsWhenLoggedOut
- * @description Query to finding trending stories when logged out: using views in the last 30 days
+ * @description Query to finding trending posts when logged out: using views in the last 30 days
  * @param {Number} offset - the offset number
  * @param {Number} limit - The limit number
- * @returns {Object} - The stories object or null, and the error if any
+ * @returns {Object} - The posts object or null, and the error if any
 */
 const fetchFeedsWhenLoggedOut = async (offset, limit) => {
-  try {
-    const stories = await sequelize.query(feedStories, {
-      replacements: { 
-        offset: offset,
-        limit: limit
-      },
-      type: Sequelize.QueryTypes.SELECT
-    });
+  const posts = await sequelize.query(feeds, {
+    replacements: { 
+      offset: offset,
+      limit: limit
+    },
+    type: Sequelize.QueryTypes.SELECT
+  });
 
-    const replies = await sequelize.query(feedReplies, {
-      replacements: { 
-        daysAgo: sevenDaysAgo.toISOString(),
-        offset: offset,
-        limit: limit
-      },
-      type: Sequelize.QueryTypes.SELECT
-    });
-
-    // Check if the replies || stories exist
-    if (replies.length < 1 && stories.length < 1) {
-      return {
-        replies: [],
-        stories: []
-      }
-    }
-
-    // check if replies exist but stories don't
-    if (replies.length > 0 && stories.length < 1) {
-      // return the replies: map the replies' dataValues
-      const repliesData = replies.map(reply => {
-        reply.like = false;
-        reply.you = false;
-        return reply;
-      });
-
-      return {
-        replies: repliesData,
-        stories: []
-      }
-    }
-
-    // check if stories exist but replies don't
-    if (replies.length < 1 && stories.length > 0) {
-      // return the stories: map the stories' dataValues
-      const storiesData = stories.map(story => {
-        story.you = false;
-        return story;
-      });
-
-      return {
-        replies: [],
-        stories: storiesData
-      }
-    }
-
-    // return the replies: map the replies' dataValues
-    const repliesData = replies.map(reply => {
-      reply.like = false;
-      reply.you = false;
-      return reply;
-    });
-
-
-    // return the stories: map the stories' dataValues
-    const storiesData = stories.map(story => {
-      story.you = false;
-      return story;
-    });
-
-    return {
-      replies: repliesData,
-      stories: storiesData
-    }
-  }
-  catch (error) {
-    throw error;
-  }
+  // return the posts: map the posts' dataValues
+  return posts.map(post => {
+    post.you = false;
+    return post;
+  });
 }
 
 // Export all queries as a single object
