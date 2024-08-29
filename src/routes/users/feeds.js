@@ -1,7 +1,4 @@
-// Story all routes
-
 const { checkToken } = require('../../middlewares').authMiddleware;
-
 const {
   findAuthorPosts, findUserFollowers, findUserFollowing
 } = require('../../controllers').postController;
