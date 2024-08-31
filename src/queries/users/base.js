@@ -86,7 +86,7 @@ const getUserByHash = async (hash, currentUser) => {
 const getUser = async (hash, you=false) => {
   // Find the user by hash
   const user = await User.findOne({ 
-    attributes: ['hash', 'bio', 'name', 'picture', 'followers', 'following', 'stories', 'verified', 'replies', 'email', 'contact'],
+    attributes: ['hash', 'bio', 'name', 'picture', 'followers', 'following', 'needs', 'verified', 'email', 'contact'],
     where: { hash } 
   });
 
@@ -120,7 +120,7 @@ const getUserWhenLoggedIn = async (hash, currentUser) => {
   }
   // Find the user by hash
   const user = await User.findOne({ 
-    attributes:['hash', 'bio', 'name', 'email', 'picture', 'followers', 'following', 'stories', 'verified', 'replies', 'contact',
+    attributes:['hash', 'bio', 'name', 'email', 'picture', 'followers', 'following', 'needs', 'verified', 'contact',
       [
         Sequelize.fn('EXISTS', Sequelize.literal(`(SELECT 1 FROM account.connects WHERE connects.to = users.hash AND connects.from = '${currentUser}')`)),
         'is_following'
@@ -153,7 +153,7 @@ const getUserWhenLoggedIn = async (hash, currentUser) => {
 const getUserProfile = async hash => {
   // Find the user by hash
   const user = await User.findOne({ 
-    attributes:['hash', 'bio', 'name', 'email', 'picture', 'followers', 'following', 'stories', 'verified', 'replies', "contact", 'contact'],
+    attributes:['hash', 'bio', 'name', 'email', 'picture', 'followers', 'following', 'needs', 'verified', "contact", 'contact'],
     where: { hash }
   });
 

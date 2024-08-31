@@ -26,8 +26,8 @@ module.exports = (app) => {
   // Route for handling user page
   app.get('/u/:hash', checkToken, getPerson);
 
-  // Route for handling user stories page
-  app.get('/u/:hash/stories', checkToken, getPerson);
+  // Route for handling user posts page
+  app.get('/u/:hash/posts', checkToken, getPerson);
 
   // Route for handling user followers page
   app.get('/u/:hash/followers', checkToken, getUserFollowers);

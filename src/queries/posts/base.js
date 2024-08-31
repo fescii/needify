@@ -27,6 +27,7 @@ const addPost = async (user, data) => {
 
   return {
     kind: post.kind,
+    name: post.name,
     author: post.author,
     hash: post.hash,
     content: post.content,
@@ -94,6 +95,7 @@ const checkIfPostExists = async hash => {
   return {
     kind: post.kind,
     author: post.author,
+    name: post.name,
     hash: post.hash,
     content: post.content,
     location: post.location,
@@ -122,6 +124,7 @@ const findPost = async hash => {
   return {
     kind: post.kind,
     author: post.author,
+    name: post.name,
     hash: post.hash,
     content: post.content,
     location: post.location,

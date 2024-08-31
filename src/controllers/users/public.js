@@ -24,7 +24,7 @@ const getPerson = async (req, res) => {
     }
 
     // add tab to the user object
-    user.tab = 'stories';
+    user.tab = 'posts';
 
     res.render('pages/user', {
       data: user

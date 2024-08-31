@@ -43,9 +43,10 @@ const findAuthorPosts = async(req, res, next) => {
     const data = await findPostsByAuthor(reqData);
 
     // check if there is no data
-    if (data.posts.length === 0) {
+    if (data.length === 0) {
       return res.status(404).json({
         success: true,
+        data: [],
         message: 'No posts found!'
       });
     }
@@ -53,7 +54,7 @@ const findAuthorPosts = async(req, res, next) => {
     // return the response
     return res.status(200).json({
       success: true,
-      message: data.posts ? 'Stories found!' : 'No posts found!',
+      message: data.posts ? 'Posts found!' : 'No posts found!',
       data
     });
   } catch (error) {
@@ -100,9 +101,10 @@ const findUserFollowers = async(req, res, next) => {
     const data = await findFollowersByAuthor(reqData);
     
     // check if there is no data
-    if (!data || data.people.length === 0) {
+    if (!data || data.length === 0) {
       return res.status(404).json({
         success: false,
+        data: [],
         message: 'No followers found!'
       });
     }
@@ -157,9 +159,10 @@ const findUserFollowing = async(req, res, next) => {
     const data = await findFollowingByAuthor(reqData);
 
     // check if there is no data
-    if (!data || data.people.length === 0) {
+    if (!data || data.length === 0) {
       return res.status(404).json({
         success: false,
+        data: [],
         message: 'No following found!'
       });
     }

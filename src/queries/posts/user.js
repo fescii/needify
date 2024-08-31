@@ -12,7 +12,7 @@ const { Post, User, Connect } = models;
 const findUserPost = async hash => {
   // Find the post
   const post = await Post.findOne({
-    attributes : ['kind', 'author', 'content', 'location', 'hash', 'price', 'views', 'end', 'createdAt', 'updatedAt'],
+    attributes : ['kind', 'author', 'name', 'content', 'location', 'hash', 'price', 'views', 'end', 'createdAt', 'updatedAt'],
     where: { hash },
     include: [
       {
@@ -44,7 +44,7 @@ const findUserPost = async hash => {
 */
 const findUserPosts = async (where, order, limit, offset) => {
   const posts = await Post.findAll({
-    attributes : ['kind', 'author', 'content', 'location', 'hash', 'price', 'views', 'end', 'createdAt', 'updatedAt'],
+    attributes : ['kind', 'author', 'name', 'content', 'location', 'hash', 'price', 'views', 'end', 'createdAt', 'updatedAt'],
     where: where,
     order: [order],
     limit: limit,

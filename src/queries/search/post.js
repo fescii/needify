@@ -32,30 +32,13 @@ const findPostsByQuery = async reqData => {
   // build the query(vector search)
   let posts = await Post.search(queryOptions);
 
-  // check if length is 0
-  if (posts.length < 1) {
-    return {
-      posts: [],
-      limit: limit,
-      offset: offset,
-      last: true,
-    }
-  }
-
-  const last = posts.length < limit;
-
   posts = posts.map(post => {
     post.you = user === post.author;
     return post;
   });
 
   // create a data object
-  return {
-    posts: posts,
-    limit: limit,
-    offset: offset,
-    last: last,
-  }
+  return posts
 }
 
 

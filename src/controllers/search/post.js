@@ -28,13 +28,22 @@ const searchPosts = async (req, res, next) => {
   }
 
   try {
-    // Find the stories
+    // Find the posts
     const data = await findPostsByQuery(reqData);
+
+    // if no posts found
+    if(data.length === 0) {
+      return res.status(404).json({
+        success: true,
+        data: [],
+        message: 'No posts found!'
+      });
+    }
 
     // return the response
     return res.status(200).json({
       success: true,
-      message: data.posts.length === 0 ? 'No posts found!' : 'Posts found!',
+      message: data.length === 0 ? 'No posts found!' : 'Posts found!',
       data
     });
   } catch (error) {

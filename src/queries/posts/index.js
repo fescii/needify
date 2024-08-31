@@ -5,7 +5,6 @@ const {
   addPost, checkIfPostExists, findPost, editPost, editEnd, editName,
   editLocation, findPostByHash, editPrice, removePost, updatePostStatus
 } = require('./base');
-// const { findReplyReplies, findStoryReplies, findStoryLikes, findReplyLikes } = require('./feeds');
 
 // Export all queries as a single object
 module.exports = {

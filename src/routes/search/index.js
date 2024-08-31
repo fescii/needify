@@ -27,7 +27,7 @@ module.exports = app => {
   // Route for handling search
   app.get('/search', checkToken, search);
 
-  // Route for handling search replies
+  // Route for handling search posts
   app.get('/api/v1/q/posts', checkToken, searchPosts);
 
   // Route for handling search people

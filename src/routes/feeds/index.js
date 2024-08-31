@@ -1,6 +1,6 @@
 // Import necessary modules, middlewares, and controllers
 const {
-  getFeeds, home, offline
+  getFeeds, home, offline, getUsers
 } = require('../../controllers').feedController;
 
 const {
@@ -27,8 +27,11 @@ module.exports = app => {
   // Route for handling(rendering) home page
   app.get('/home', checkToken, home);
 
-  // Route for handling feeds(stories & replies)
+  // Route for handling feeds
   app.get('/api/v1/h/feeds', checkToken, getFeeds);
+
+  // Route for handling users
+  app.get('/api/v1/h/users', checkToken, getUsers);
 
   // Route for handling offline page
   app.get('/offline', checkToken, offline);

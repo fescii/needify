@@ -29,6 +29,13 @@ const searchUsers = async (req, res, next) => {
   try {
     // Find the users
     const data = await findUsersByQuery(reqData);
+    if (data.length === 0) {
+      return res.status(404).json({
+        success: true,
+        data: [],
+        message: 'No users found!'
+      });
+    }
 
     // return the response
     return res.status(200).json({

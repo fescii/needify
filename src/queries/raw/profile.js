@@ -5,7 +5,7 @@
 */
 const userPosts = /*sql*/`
   WITH user_connections AS (SELECT "to", TRUE AS is_following FROM account.connects WHERE "from" = :user)
-  SELECT p.kind, p.author, p.content, p.hash, p.views, p.price, p.location, p.end, p."createdAt", p."updatedAt",
+  SELECT p.kind, p.author, p.name, p.content, p.hash, p.views, p.price, p.location, p.end, p."createdAt", p."updatedAt",
   JSON_BUILD_OBJECT('id', pa.id, 'hash', pa.hash, 'bio', pa.bio, 'name', pa.name, 'picture', pa.picture, 'followers', pa.followers, 'following', pa.following, 'verified', pa.verified,'contact', pa.contact, 'email', pa.email, 'is_following', COALESCE(uc.is_following, FALSE)) AS post_author
   FROM post.posts p
   LEFT JOIN account.users pa ON p.author = pa.hash

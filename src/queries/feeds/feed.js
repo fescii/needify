@@ -36,9 +36,8 @@ const fetchFeedsWhenLoggedIn = async (user, offset, limit) => {
   });
 
   // Check if the posts || posts exist
-  if (posts.length < 1 && posts.length < 1) {
+  if (posts.length < 1) {
     return {
-      posts: [],
       posts: []
     }
   }

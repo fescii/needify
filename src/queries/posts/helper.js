@@ -12,7 +12,7 @@ const { Post, User } = models;
 const findPostWhenLoggedIn = async (hash, user) => {
   // Find the post
   const post = await Post.findOne({
-    attributes : ['kind', 'author', 'content', 'location', 'hash', 'price', 'views', 'end', 'createdAt', 'updatedAt'],
+    attributes : ['kind', 'author', 'name', 'content', 'location', 'hash', 'price', 'views', 'end', 'createdAt', 'updatedAt'],
     where: { hash },
     include: [
       {
@@ -48,7 +48,7 @@ const findPostWhenLoggedIn = async (hash, user) => {
 const findPostWhenLoggedOut = async hash => {
   // Find the post
   const post = await Post.findOne({
-    attributes : ['kind', 'author', 'content', 'location', 'hash', 'price', 'views', 'end', 'createdAt', 'updatedAt'],
+    attributes : ['kind', 'author', 'name', 'content', 'location', 'hash', 'price', 'views', 'end', 'createdAt', 'updatedAt'],
     where: { hash },
     include: [
       {
@@ -82,7 +82,7 @@ const findPostWhenLoggedOut = async hash => {
 const findPostsWhenLoggedIn = async (where, order, user, limit, offset) => {
   // Find the posts
   const posts = await Post.findAll({
-    attributes : ['kind', 'author', 'content', 'location', 'hash', 'price', 'views', 'end', 'createdAt', 'updatedAt' ],
+    attributes : ['kind', 'author', 'name', 'content', 'location', 'hash', 'price', 'views', 'end', 'createdAt', 'updatedAt' ],
     where: where,
     order: [order],
     limit: limit,
@@ -122,7 +122,7 @@ const findPostsWhenLoggedIn = async (where, order, user, limit, offset) => {
 const findPostsWhenLoggedOut = async (where, order, limit, offset) => {
   // Find the posts
   const posts = await Post.findAll({
-    attributes : ['kind', 'author', 'content', 'location', 'hash', 'price', 'views', 'end', 'createdAt', 'updatedAt'],
+    attributes : ['kind', 'author', 'name', 'content', 'location', 'hash', 'price', 'views', 'end', 'createdAt', 'updatedAt'],
     where: where,
     order: [order],
     limit: limit,

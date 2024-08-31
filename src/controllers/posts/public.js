@@ -29,7 +29,7 @@ const getPost = async (req, res) => {
     await viewContent(post.hash);
 
     // add tab to the post object
-    post.tab = 'replies';
+    post.tab = 'posts';
 
     res.render('pages/post', {
       data: post

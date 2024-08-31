@@ -30,30 +30,13 @@ const findUsersByQuery = async reqData => {
   // build the query(vector search)
   let users = await User.search(queryOptions);
 
-  // if no users found, return an empty array
-  if (!users) {
-    return {
-      people: [],
-      limit: limit,
-      offset: offset,
-      last: true,
-    }
-  }
-
-  const last = users.length < limit;
-
   users = users.map(author => {
     author.you = author.hash === user;
     return author;
   })
 
   // create a data object
-  return { 
-    people: users,
-    limit: limit,
-    offset: offset,
-    last: last,
-  }
+  return users
 }
 
 module.exports = {
