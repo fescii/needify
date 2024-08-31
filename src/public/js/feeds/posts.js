@@ -192,7 +192,7 @@ export default class PostFeed extends HTMLElement {
       const author = post.post_author;
       return /*html*/`
         <post-wrapper kind="${post.kind}" hash="${post.hash}" url="/r/${post.hash}" views="${post.views}" time="${post.createdAt}" name="${post.name}"
-          user-hash="${author.hash}" you="${post.you}" user-url="/u/${author.hash}" location="${post.location}" price="${post.price}"
+          user-hash="${author.hash}" you="${post.you}" user-url="/u/${author.hash}" location="${post.location}" price="${post.price}" user-email="${author.email}"
           user-picture="${author.picture}" user-verified="${author.verified}" user-name="${author.name}" user-followers="${author.followers}"
           user-following="${author.following}" user-follow="${author.is_following}" user-bio="${author.bio === null ? 'The user has no bio yet!' : author.bio}">
           ${post.content}

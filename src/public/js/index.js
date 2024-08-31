@@ -1,3 +1,17 @@
+// set hash if user is logged
+const setHash = name => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+
+  const cookie = parts.length === 2 ? parts.pop().split(';').shift() : null;
+
+  // add cookie to the window
+  window.hash = cookie;
+}
+
+// set hash
+setHash('hash');
+
 // import apps
 import AppHome from "./apps/app.js";
 import AppLogon from "./apps/logon.js";
@@ -16,6 +30,7 @@ import PostFeed from "./feeds/posts.js";
 import PostWrapper from "./wrappers/post.js";
 import UserWrapper from "./wrappers/user.js";
 import HeaderWrapper from "./wrappers/header.js";
+import NewPost from "./wrappers/create.js";
 
 // import loaders
 import PeopleLoader from "./loaders/people.js";
@@ -42,6 +57,7 @@ customElements.define("post-feed", PostFeed);
 customElements.define("post-wrapper", PostWrapper);
 customElements.define("user-wrapper", UserWrapper);
 customElements.define("header-wrapper", HeaderWrapper);
+customElements.define("create-post", NewPost, { extends: "div" });
 
 // register custom elements: loaders
 customElements.define("people-loader", PeopleLoader);

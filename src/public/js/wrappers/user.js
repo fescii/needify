@@ -296,9 +296,9 @@ export default class UserWrapper extends HTMLElement {
     this.setAttribute('user-follow', followed.toString());
 
     // Set the followers attribute
-    // this.setAttribute('followers', followers.toString());
+    this.setAttribute('followers', followers.toString());
 
-    // this.setAttributes('followers', followers)
+    this.setAttributes('followers', followers)
 
     this.setAttributes('user-follow', followed.toString());
 
@@ -729,7 +729,7 @@ export default class UserWrapper extends HTMLElement {
         .actions > .action {
           text-decoration: none;
           padding: 2px 12px 3px;
-          font-weight: 500;
+          font-weight: 400;
           background: var(--accent-linear);
           color: var(--white-color);
           font-family: var(--font-main), sans-serif;

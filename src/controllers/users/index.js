@@ -7,7 +7,7 @@ const {
 } = require('./edit');
 
 const {
-  getPerson, getUserPosts, getUserFollowers, getUserFollowing, getAccount, fetchUser
+  getPerson, getUserPosts, getUserFollowers, getUserFollowing, getAccount, fetchUser, getUser
 } = require('./public')
 
 
@@ -17,5 +17,5 @@ module.exports = {
   updateProfileBio, updateProfileContact, updateProfileName,
   updateProfilePassword, updateProfilePicture, updateProfileEmail,
   getPerson, getUserPosts, getUserFollowers, getUserFollowing,
-  getAccount, fetchUser,
+  getAccount, fetchUser, getUser
 }

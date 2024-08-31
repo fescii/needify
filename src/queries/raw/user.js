@@ -6,11 +6,12 @@
 const usersLoggedIn = /*sql*/`
   WITH user_followers AS (SELECT "to", TRUE AS is_following FROM account.connects WHERE "from" = :user)
   SELECT u.hash, u.name, u.email, u.bio, u.picture, u.followers, u.following, u.needs,  u.verified, u.contact, COALESCE(uf.is_following, FALSE) AS is_following
-  FROM account.users 
+  FROM account.users u
   LEFT JOIN  user_followers uf ON u.hash = uf."to"
   WHERE  u.hash != :user
-  ORDER u.followers DESC
-  LIMIT :limit OFFSET :offset;
+  ORDER BY u.followers DESC
+  LIMIT :limit 
+  OFFSET :offset;
 `
 
 /**
@@ -22,7 +23,8 @@ const usersLoggedOut = /*sql*/`
   SELECT u.hash, u.name, u.email, u.bio, u.picture, u.followers, u.following, u.needs, u.verified, u.contact, FALSE AS is_following
   FROM account.users u
   ORDER BY u.followers DESC
-  LIMIT :limit OFFSET :offset;
+  LIMIT :limit 
+  OFFSET :offset;
 `
 
 module.exports = {

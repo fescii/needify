@@ -66,7 +66,6 @@ export default class AppLogon extends HTMLElement {
         if (initialName === 'join') {
           outerThis.activateRegister(contentContainer, stagesContainer, contentTitle);
           outerThis.activateLogin(contentContainer, stagesContainer, contentTitle);
-          this.activateForgot(contentContainer, stagesContainer, contentTitle);
         } else if (initialName === 'login') {
           outerThis.loginLoaded(contentContainer, stagesContainer, contentTitle);
         } else if (initialName === 'forgot') {
@@ -76,7 +75,6 @@ export default class AppLogon extends HTMLElement {
         } else {
           outerThis.activateRegister(contentContainer, stagesContainer, contentTitle);
           outerThis.activateLogin(contentContainer, stagesContainer, contentTitle);
-          this.activateForgot(contentContainer, stagesContainer, contentTitle);
         }
       }
     }
@@ -543,7 +541,7 @@ export default class AppLogon extends HTMLElement {
         userKeyGroup.classList.add('success');
       }, 2000);
 
-      data['email'] = userKeyValue;
+      data['user_key'] = userKeyValue;
     }
 
     if (passwordValue === '') {
@@ -564,7 +562,7 @@ export default class AppLogon extends HTMLElement {
       data['password'] = passwordValue;
     }
 
-    if (data['email'] && data['password']) {
+    if (data['user_key'] && data['password']) {
       //API CALL
       outerThis.performLogin(form, data)
     }
@@ -651,8 +649,8 @@ export default class AppLogon extends HTMLElement {
     const submitButton = form.querySelector('.actions > .action.next ');
     const inputField = form.querySelector('.field.bio');
 
-    const firstName = inputField.querySelector('.input-group.firstname');
-    const lastname = inputField.querySelector('.input-group.lastname');
+    const name = inputField.querySelector('.input-group.name');
+    const username = inputField.querySelector('.input-group.username');
     const email = inputField.querySelector('.input-group.email');
 
     submitButton.innerHTML = outerThis.getButtonLoader();
@@ -660,7 +658,7 @@ export default class AppLogon extends HTMLElement {
 
 
     // Validate names
-    if (this.validateName(firstName, submitButton) && this.validateName(lastname, submitButton)) {
+    if (this.validateName(name, submitButton) && this.validateUsername(username, submitButton)) {
       const input = email.querySelector('input').value.trim();
 
       email.classList.remove('success', 'failed');
@@ -686,8 +684,16 @@ export default class AppLogon extends HTMLElement {
 
         if (input.match(validRegex)) {
 
-          // Call the API
-          outerThis.checkEmail(form, input, email, emailStatus);
+          // Add email to the data object
+          this._data.register['email'] = input;
+
+          email.classList.add('success');
+
+          setTimeout(() => {
+            submitButton.innerHTML = `<span class="text">Register</span>`
+            submitButton.style.setProperty("pointer-events", 'auto');
+            this.activatePassword(form)
+          }, 2000);
         }
         else {
           emailStatus.textContent = 'Enter a valid email!';
@@ -716,7 +722,7 @@ export default class AppLogon extends HTMLElement {
     const nameStatus = nameElement.querySelector('span.status');
 
     if (input === '') {
-      nameStatus.textContent = 'This field is required!';
+      nameStatus.textContent = 'Your name is required!';
       nameElement.insertAdjacentHTML('beforeend', outerThis._failed);
       nameElement.classList.add('failed');
 
@@ -731,12 +737,7 @@ export default class AppLogon extends HTMLElement {
       nameStatus.textContent = '';
       nameElement.insertAdjacentHTML('beforeend', this._success);
 
-      if (inputElement.dataset.name === "firstname") {
-        this._data.register['first_name'] = input;
-      }
-      else {
-        this._data.register['last_name'] = input;
-      }
+      this._data.register['name'] = input;
 
       nameElement.classList.add('success');
 
@@ -744,51 +745,39 @@ export default class AppLogon extends HTMLElement {
     }
   }
 
-  checkEmail = async (form, input, email, emailStatus) =>  {
-    const submitButton = form.querySelector('.actions > .action.next');
+  validateUsername = (nameElement, submitButton) => {
+    const outerThis = this;
+    const inputElement = nameElement.querySelector('input')
+    const input = nameElement.querySelector('input').value.trim();
 
-    // After API call
-    const {
-      result,
-      error
-    } = await this.checkIfEmailExists({ email: input });
+    nameElement.classList.remove('success', 'failed');
+    let svg = nameElement.querySelector('svg');
+    if (svg) {
+      svg.remove();
+    }
+    const nameStatus = nameElement.querySelector('span.status');
 
-    // If error occurs
-    if (error) {
-      const errorMsg = this.getServerMsg('Something went wrong, try again!');
-      form.insertAdjacentHTML('afterbegin', errorMsg);
+    if (input === '') {
+      nameStatus.textContent = 'Your username is required!';
+      nameElement.insertAdjacentHTML('beforeend', outerThis._failed);
+      nameElement.classList.add('failed');
 
       setTimeout(() => {
         submitButton.innerHTML = `<span class="text">Continue</span>`
         submitButton.style.setProperty("pointer-events", 'auto');
       }, 1000);
-    }
 
-    // If email does not exist
-    if (result.success) {
-      // Add email to the data object
-      this._data.register['email'] = input;
-
-      emailStatus.textContent = result.message;
-      email.insertAdjacentHTML('beforeend', this._success);
-
-      email.classList.add('success');
-
-      setTimeout(() => {
-        submitButton.innerHTML = `<span class="text">Register</span>`
-        submitButton.style.setProperty("pointer-events", 'auto');
-        this.activatePassword(form)
-      }, 2000);
+      return false;
     }
     else {
-      emailStatus.textContent = result.message;
-      email.insertAdjacentHTML('beforeend', this._failed);
-      email.classList.add('failed');
+      nameStatus.textContent = '';
+      nameElement.insertAdjacentHTML('beforeend', this._success);
 
-      setTimeout(() => {
-        submitButton.innerHTML = `<span class="text">Continue</span>`
-        submitButton.style.setProperty("pointer-events", 'auto');
-      }, 1000);
+      this._data.register['username'] = input;
+
+      nameElement.classList.add('success');
+
+      return true;
     }
   }
 
@@ -921,33 +910,6 @@ export default class AppLogon extends HTMLElement {
       const result = await response.json();
 
       return  {
-        result: result,
-        error: null
-      }
-    }
-    catch (error) {
-      return {
-        result: null,
-        error: error
-      }
-    }
-  }
-
-  checkIfEmailExists = async data => {
-    const outerThis = this;
-    const checkEmailUrl = outerThis.getAttribute('api-check-email');
-    try {
-      const response = await fetch(checkEmailUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      return {
         result: result,
         error: null
       }
@@ -1596,8 +1558,8 @@ export default class AppLogon extends HTMLElement {
 				<p>
 					Add your own quote for the service you need, or product, and quickly find a solution.
 				</p>
-				<a href=${this.getAttribute('login')} class="login">Login</a>
-				<a href=${this.getAttribute('register')} class="register">Register</a>
+				<a href="/join/login" class="login">Login</a>
+				<a href="/join/register" class="register">Register</a>
 				<div class="info">
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill"
 						viewBox="0 0 16 16">
@@ -1699,18 +1661,18 @@ export default class AppLogon extends HTMLElement {
   getBioFields() {
     return /*html*/`
       <div class="field bio">
-				<div class="input-group firstname">
-					<label for="firstname" class="center">First name</label>
+				<div class="input-group name">
+					<label for="name" class="center">Name</label>
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
 						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
 					</svg>
-					<input data-name="firstname" type="text" name="firstname" id="firstname" placeholder="e.g John" required>
-					<span class="status">First name is required</span>
+					<input data-name="name" type="text" name="name" id="name" placeholder="e.g John Doe" required>
+					<span class="status">Name is required</span>
 				</div>
-				<div class="input-group lastname">
-					<label for="lastname" class="center">Last name</label>
-					<input data-name="lastname" type="text" name="lastname" id="lastname" placeholder="e.g Doe" required>
-					<span class="status">Last name is required</span>
+				<div class="input-group username">
+					<label for="username" class="center">Username</label>
+					<input data-name="username" type="text" name="username" id="username" placeholder="e.g johndoe" required>
+					<span class="status">Username is required</span>
 				</div>
 				<div class="input-group email">
 					<label for="email" class="center">Email</label>
@@ -1796,16 +1758,16 @@ export default class AppLogon extends HTMLElement {
   }
 
   getLoginForm() {
-    return `
+    return /*html*/`
       <form class="fields initial bio">
 				<div class="field login bio">
 					<div class="input-group user-key">
-						<label for="email" class="center">Email</label>
+						<label for="user-key" class="center">Email/Username</label>
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
 							<path
 								d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
 						</svg>
-						<input data-name="email" type="email" name="email" id="email" placeholder="e.g john@example.com"
+						<input data-name="user-key" type="text" name="user-key" id="user-key" placeholder="e.g john@example.com"
 							required>
 						<span class="status">Username or email is required</span>
 					</div>

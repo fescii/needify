@@ -14,7 +14,7 @@ const fetchUsers = async reqData => {
   // calculate the offset and limit
   const offset = (page - 1) * limit;
 
-  return user ? await fetchPeopleWhenLoggedIn(user, offset, limit) : await fetchPeopleWhenLoggedOut(offset, limit);
+  return user ? await fetchPeopleWhenLoggedIn(user, offset, limit) :  await fetchPeopleWhenLoggedOut(offset, limit);
 }
 
 /**
@@ -35,17 +35,11 @@ const fetchPeopleWhenLoggedIn = async (user, offset, limit) => {
     type: Sequelize.QueryTypes.SELECT
   });
 
-  // Check if the people
-  if (people.length < 1 && people.length < 1) {
-    return {
-      people: [],
-    }
-  }
 
   // return the people:
   return people.map(person => {
     person.you = user === person.hash;
-    return people;
+    return person;
   });
 }
 

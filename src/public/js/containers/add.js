@@ -14,7 +14,8 @@ export default class FormContainer extends HTMLElement {
   }
 
   connectedCallback() {
-   
+   this.activateProductButton()
+   this.activateServiceButton()
   }
 
   activateTopicButton = () => {
@@ -33,60 +34,52 @@ export default class FormContainer extends HTMLElement {
     });
   }
 
-  activatePostButton = () => {
+  activateProductButton = () => {
     // Get the post button
-    const postButton = this.shadowObj.querySelector('.post');
+    const postButton = this.shadowObj.querySelector('.product');
     // Add an event listener to the post button
     postButton.addEventListener('click', e => {
       e.preventDefault();
       // Get the body element
       const body = document.querySelector('body');
       // Get the content
-      const content = this.getPost();
+      const content = this.getProduct();
 
       // insert the content into the body
       body.insertAdjacentHTML('beforeend', content);
     });
   }
 
-  activateArticleButton = () => {
-    // Get the article button
-    const articleButton = this.shadowObj.querySelector('.article');
-    // Add an event listener to the article button
-    articleButton.addEventListener('click', e => {
+  activateServiceButton = () => {
+    // Get the post button
+    const postButton = this.shadowObj.querySelector('.service');
+    // Add an event listener to the post button
+    postButton.addEventListener('click', e => {
       e.preventDefault();
-
       // Get the body element
       const body = document.querySelector('body');
-
       // Get the content
-      const content = this.getArticle();
+      const content = this.getService();
 
       // insert the content into the body
       body.insertAdjacentHTML('beforeend', content);
     });
   }
 
-  getTopic = () => {
-    // Show Topic Page Here
-    return /* html */`
-      <div is="create-topic" api="/api/v1/t/add" method="PUT"></div>
-    `;
-  }
-
-  getPost = () => {
+  getService = () => {
     // Show Post Page Here
     return /* html */`
-      <div is="create-post" api="/api/v1/s/add" method="PUT"></div>
+      <div is="create-post" api="/api/v1/p/add" kind="service" method="PUT"></div>
     `;
   }
 
-  getArticle = () => {
-    // Show Article Page Here
+  getProduct = () => {
+    // Show Post Page Here
     return /* html */`
-      <div is="create-article" api="/api/v1/s/add" method="PUT"></div>
+      <div is="create-post" api="/api/v1/p/add" kind="product" method="PUT"></div>
     `;
   }
+
 
   getTemplate = () => {
     // Show HTML Here

@@ -267,10 +267,11 @@ export default class PostWrapper extends HTMLElement {
   }
 
   checkYou = you => {
+    const email = this.getAttribute('user-email');
     if (you) {
       return `<span class="action edit" id="edit-action">edit</span>`
     } else {
-      return `<a href="" class="action contact" id="contact-action">contact</a>`
+      return `<a href="mailto:${email}" class="action contact">contact</a>`
     }
   }
 

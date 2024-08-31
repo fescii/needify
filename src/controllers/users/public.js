@@ -34,6 +34,39 @@ const getPerson = async (req, res) => {
   }
 }
 
+/**
+ * @controller {get} /t/:slug(:hash) Topic
+ * @name getPerson
+ * @description This route will the user page for the app.
+ * @returns Page: Renders user page
+*/
+const getUser = async (req, res) => {
+  //get the params from the request
+  let param = req?.user?.hash;
+
+  // if there is no user, render the login page
+  if (!param) return res.redirect('/join/login?next=/user');
+
+  try {
+    // query the database for the user
+    const user = await getUserByHash(param, req.user.hash);
+
+    // if there is no user, render the 404 page
+    if (!user) {
+      return res.status(404).render('404')
+    }
+
+    // add tab to the user object
+    user.tab = 'posts';
+
+    res.render('pages/user', {
+      data: user
+    })
+  } catch (error) {
+    return res.status(500).render('500')
+  }
+}
+
 
 /**
  * @controller {get} /t/:slug(:hash) Topic
@@ -205,5 +238,5 @@ const getAccount = async (req, res) => {
 // Export all public content controllers
 module.exports = {
   getPerson, getUserPosts, getUserFollowers, getUserFollowing, getAccount,
-  fetchUser
+  fetchUser, getUser
 }

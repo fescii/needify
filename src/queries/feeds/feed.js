@@ -34,14 +34,7 @@ const fetchFeedsWhenLoggedIn = async (user, offset, limit) => {
     },
     type: Sequelize.QueryTypes.SELECT
   });
-
-  // Check if the posts || posts exist
-  if (posts.length < 1) {
-    return {
-      posts: []
-    }
-  }
-
+  
   // return the posts: map the posts' dataValues
   return posts.map(post => {
     post.you = user === post.author;

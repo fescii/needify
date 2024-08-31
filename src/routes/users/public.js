@@ -1,10 +1,10 @@
 // Import necessary modules, middlewares, and controllers
 const {
-  getPerson, getUserFollowers, getUserFollowing, fetchUser
+  getPerson, getUserFollowers, getUserFollowing, fetchUser, getUser
 } = require('../../controllers').userController;
 
 const {
-  checkToken
+  checkToken, verifyLogin
 } = require('../../middlewares').authMiddleware;
 
 /**
@@ -25,6 +25,9 @@ module.exports = (app) => {
 
   // Route for handling user page
   app.get('/u/:hash', checkToken, getPerson);
+
+  // Route for handling user page
+  app.get('/user', verifyLogin, getUser);
 
   // Route for handling user posts page
   app.get('/u/:hash/posts', checkToken, getPerson);

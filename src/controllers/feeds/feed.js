@@ -85,7 +85,7 @@ const getUsers = async(req, res, next) => {
   try {
     // Find the posts
     const data = await fetchUsers(reqData);
-
+    
     // check length of the data
     if (data.length === 0) {
       return res.status(404).json({
