@@ -26,7 +26,12 @@ let sequelize = new Sequelize(
     dialect: dbConfig.dialect,
     operatorsAliases: 0,
     port: dbConfig.PORT,
-
+    "dialectOptions": {
+      "ssl": {
+        require: true,
+        rejectUnauthorized: false
+      }
+    } ,
     pool: {
       max: dbConfig.pool.max,
       min: dbConfig.pool.min,
